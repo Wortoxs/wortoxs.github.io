@@ -1,0 +1,764 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/icon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="wtox">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="前言Debian 虽然稳定，但里面的软件包也太陈旧了( 想一想作为桌面也没必要用得那么稳定？趁这个机会打算换一个新的发行版 van van 最后选择了 fedora（并不太想折腾 Arch 安装步骤获取 fedora 镜像文件(rootfs image)在 Fedora-Container-Base  或 fedora-cloud&#x2F;docker-brew-fedora  中下载相应的镜像，解压后得">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在 wsl 中安装 fedora">
+<meta property="og:url" content="http://wortoxs.github.io/2022/10/08/%E5%9C%A8-wsl-%E4%B8%AD%E5%AE%89%E8%A3%85-fedora/index.html">
+<meta property="og:site_name" content="Hello World!">
+<meta property="og:description" content="前言Debian 虽然稳定，但里面的软件包也太陈旧了( 想一想作为桌面也没必要用得那么稳定？趁这个机会打算换一个新的发行版 van van 最后选择了 fedora（并不太想折腾 Arch 安装步骤获取 fedora 镜像文件(rootfs image)在 Fedora-Container-Base  或 fedora-cloud&#x2F;docker-brew-fedora  中下载相应的镜像，解压后得">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-10-08T11:29:16.000Z">
+<meta property="article:modified_time" content="2023-07-12T01:09:42.719Z">
+<meta property="article:author" content="wtox">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="WSL">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>在 wsl 中安装 fedora - Hello World!</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"wortoxs.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Hello World!</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="在 wsl 中安装 fedora"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-10-08 11:29" pubdate>
+          2022年10月8日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          25 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">在 wsl 中安装 fedora</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Debian 虽然稳定，但里面的软件包也太陈旧了(</p>
+<p>想一想作为桌面也没必要用得那么稳定？趁这个机会打算换一个新的发行版 van van</p>
+<p>最后选择了 fedora（并不太想折腾 Arch</p>
+<h2 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h2><h3 id="获取-fedora-镜像文件-rootfs-image"><a href="#获取-fedora-镜像文件-rootfs-image" class="headerlink" title="获取 fedora 镜像文件(rootfs image)"></a>获取 fedora 镜像文件(rootfs image)</h3><p>在</p>
+<a class="btn" href="https://koji.fedoraproject.org/koji/packageinfo?packageID=26387"  target="_blank">Fedora-Container-Base</a>
+
+<p>或</p>
+<a class="btn" href="https://github.com/fedora-cloud/docker-brew-fedora"  target="_blank">fedora-cloud/docker-brew-fedora</a>
+
+<p>中下载相应的镜像，解压后得到<code>xxx.tar</code>文件（设解压后地址为<code>$FEDORA_IMAGE_PATH</code>）</p>
+<div class="note note-info">
+            <p>如何获取其他发行版的<code>rootfs</code>? </p><p><a class="btn" href="https://learn.microsoft.com/en-us/windows/wsl/use-custom-distro"  target="_blank">Import any Linux distribution to use with WSL</a></p>
+          </div>
+<h3 id="在-wsl-中导入"><a href="#在-wsl-中导入" class="headerlink" title="在 wsl 中导入"></a>在 wsl 中导入</h3><p>创建存储目录<code>$WSL_STORE_PATH</code>，例如</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-variable">$WSL_SOTRE_PATH</span> = <span class="hljs-string">&#x27;~/wsl/fedora&#x27;</span><br></code></pre></td></tr></table></figure>
+<p>然后在wsl中导入，这里命名为<code>fedora</code></p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs powershell">wsl <span class="hljs-literal">--import</span> fedora <span class="hljs-variable">$WSL_STORE_PATH</span> <span class="hljs-variable">$FEDORA_IMAGE_PATH</span><br></code></pre></td></tr></table></figure>
+<p>使用<code>wsl -d fedora</code>启动</p>
+<h3 id="安装软件包与配置"><a href="#安装软件包与配置" class="headerlink" title="安装软件包与配置"></a>安装软件包与配置</h3><h4 id="更新系统"><a href="#更新系统" class="headerlink" title="更新系统"></a>更新系统</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">dnf update<br></code></pre></td></tr></table></figure>
+<h4 id="创建用户"><a href="#创建用户" class="headerlink" title="创建用户"></a>创建用户</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">dnf install -y passwd cracklib-dicts<br>useradd -G wheel <span class="hljs-variable">$USER_NAME</span><br>passwd <span class="hljs-variable">$USER_NAME</span><br></code></pre></td></tr></table></figure>
+<p>设置 wsl 的默认登陆用户</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">printf</span> <span class="hljs-string">&quot;[user]\ndefault=<span class="hljs-variable">$USER_NAME</span>&quot;</span> | <span class="hljs-built_in">tee</span> -a /etc/wsl.conf<br></code></pre></td></tr></table></figure>
+<div class="note note-info">
+            <p>可以使用<code>wsl -d fedora -u $USER_NAME</code>指定登录的用户</p>
+          </div>
+
+<h4 id="其他软件包"><a href="#其他软件包" class="headerlink" title="其他软件包"></a>其他软件包</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo dnf install -y procps-ng iputils iproute ncurses findutils git<br></code></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>软件包</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>procps-ng</td>
+<td>提供与进程相关的命令，例如<code>top</code></td>
+</tr>
+<tr>
+<td>iputils</td>
+<td>提供<code>ping</code>命令</td>
+</tr>
+<tr>
+<td>iproute</td>
+<td>提供<code>ip</code>等命令</td>
+</tr>
+<tr>
+<td>ncruses</td>
+<td>TUI</td>
+</tr>
+<tr>
+<td>findutils</td>
+<td>查找</td>
+</tr>
+<tr>
+<td>git</td>
+<td>git</td>
+</tr>
+</tbody></table>
+<div class="note note-info">
+            <p>配置不需要 root 权限的 ping</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo sysctl -w net.ipv4.ping_group_range=<span class="hljs-string">&#x27;0 10&#x27;</span><br></code></pre></td></tr></table></figure><p>具体作用可以参考<a target="_blank" rel="noopener" href="https://blog.lilydjwg.me/2013/10/29/non-privileged-icmp-ping.41390.html">不需要 root 权限的 ICMP ping</a></p><p><span class="label label-warning">配置可能会失效！<sup><a href="#sysctl-%E5%A4%B1%E6%95%88">⚓</a></sup></span></p>
+          </div>
+
+<div class="note note-info">
+            <p><code>initscripts</code>这个 package 包括了 fedora 的一些启动脚本，例如网络等，但由于其基于<code>legacy System V</code>而非<code>systemd</code><sup><a href="#Systemd">⚓</a></sup>，因此这里没有安装</p>
+          </div>
+
+<h4 id="配置-man-可选"><a href="#配置-man-可选" class="headerlink" title="配置 man(可选)"></a>配置 <code>man</code>(可选)</h4><p>确保<code>nodocs</code>没有开启</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">grep -v nodocs /etc/dnf/dnf.conf | sudo <span class="hljs-built_in">tee</span> /etc/dnf/dnf.conf<br></code></pre></td></tr></table></figure>
+<p>安装 <code>man</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo dnf install -y man man-pages<br></code></pre></td></tr></table></figure>
+<div class="note note-info">
+            <p>之前已经安装的软件需要重新安装才能使用<code>man</code>查看文档。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-keyword">for</span> pkg <span class="hljs-keyword">in</span> $(dnf repoquery --installed --qf <span class="hljs-string">&quot;%&#123;name&#125;&quot;</span>); <span class="hljs-keyword">do</span> sudo dnf reinstall -qy <span class="hljs-variable">$pkg</span>; <span class="hljs-keyword">done</span><br></code></pre></td></tr></table></figure><p><strong>可能会非常费时！</strong></p>
+          </div>
+
+<h2 id="可能出现的问题"><a href="#可能出现的问题" class="headerlink" title="可能出现的问题"></a>可能出现的问题</h2><h3 id="挂载错误"><a href="#挂载错误" class="headerlink" title="挂载错误"></a>挂载错误</h3><blockquote>
+<p>如果你在第一次启动 fedora 时得到了以下错误：</p>
+<p><code>An error occurred mounting one of your file systems. Please run &#39;dmesg&#39; for more details.</code></p>
+<p>这是由于系统缺少 mount 指令造成的，如果你不需要 mount 指令也不在意错误，完全可以忽略这个错误（虽然还是建议修一下）。</p>
+<p>安装 util-linux 这个包即可。（如果你是一个极简主义者，安装 util-linux-core 这个包）</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo dnf install -y util-linux-core<br></code></pre></td></tr></table></figure>
+
+<h3 id="容器"><a href="#容器" class="headerlink" title="容器"></a>容器</h3><blockquote>
+<p>如果你需要运行容器，重新安装 shadow-utils 确保修复一些 rootfs 带来的错误：</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo dnf reinstall -y shadow-utils<br></code></pre></td></tr></table></figure>
+
+<h3 id="locale"><a href="#locale" class="headerlink" title="locale"></a>locale</h3><blockquote>
+<p>To be able to setup the locale within fedora you need systemd. To get around this you can use the following (substitute en, en_US with your locale strings):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">dnf -y install glibc-common glibc-locale-source glibc-langpack-en<br>localedef --force -f UTF-8 -i en_US en_US.UTF-8<br></code></pre></td></tr></table></figure>
+<p>Additionally, you may want to install your locale resources, sucha as:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">dnf -y install langpacks-core-en_US langpacks-en_US man-pages-en_US<br></code></pre></td></tr></table></figure>
+<p>And don´t forget to check and change if necessary &#x2F;etc&#x2F;locale.conf and &#x2F;etc&#x2F;locales.conf</p>
+</blockquote>
+<h3 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h3><p>通常来讲，wsl 会自动设置dns，自动配置<code>/etc/resolv.conf</code></p>
+<p>如果 DNS 不能工作的话，就要自己进行配置</p>
+<h4 id="禁用-wsl-自动生成resolv-conf"><a href="#禁用-wsl-自动生成resolv-conf" class="headerlink" title="禁用 wsl 自动生成resolv.conf"></a>禁用 wsl 自动生成<code>resolv.conf</code></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;[network]\ngenerateResolvConf = false&quot;</span> &gt; /etc/wsl.conf<br></code></pre></td></tr></table></figure>
+
+<h4 id="添加-DNS-配置"><a href="#添加-DNS-配置" class="headerlink" title="添加 DNS 配置"></a>添加 DNS 配置</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">unlink</span> /etc/resolv.conf<br><span class="hljs-built_in">echo</span> nameserver 1.1.1.1 &gt; /etc/resolv.conf<br></code></pre></td></tr></table></figure>
+
+<h4 id="可能出现问题的原因"><a href="#可能出现问题的原因" class="headerlink" title="可能出现问题的原因"></a>可能出现问题的原因</h4><blockquote>
+<p>Apparently, Fedora 33 uses systemd-resolvd, and when we upgrade packages with dnf upgrade something was overwriting &#x2F;etc&#x2F;resolv.conf with a link to &#x2F;run&#x2F;systemd&#x2F;resolve&#x2F;stub-resolv.conf which didn’t actually exist.</p>
+</blockquote>
+<h3 id="sysctl-失效"><a href="#sysctl-失效" class="headerlink" title="sysctl 失效"></a>sysctl 失效</h3><blockquote>
+<p>sysctl won’t persist after WSL reboot. You can set kernel parameters using C:\Users\username.config or &#x2F;etc&#x2F;wsl.conf (Windows 11 only). <a class="btn" href="https://github.com/microsoft/WSL/issues/4232#issuecomment-1233345818"  target="_blank">Issue Comment</a></p>
+<p>Seems like you would need to use absolute path to sysctl if you are editing wsl.conf tho because sysctl is not loaded to $PATH yet.  <a class="btn" href="https://github.com/microsoft/WSL/issues/4232#issuecomment-1250009979"  target="_blank">Issue Comment</a></p>
+</blockquote>
+<h2 id="导出"><a href="#导出" class="headerlink" title="导出"></a>导出</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 清除缓存文件</span><br>sudo dnf clean all<br></code></pre></td></tr></table></figure>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-comment"># 导出</span><br>wsl <span class="hljs-literal">--export</span> fedora <span class="hljs-variable">$EXPORT_PATH</span><br></code></pre></td></tr></table></figure>
+<h2 id="更新系统-1"><a href="#更新系统-1" class="headerlink" title="更新系统 "></a>更新系统 <a class="btn" href="https://fedoraproject.org/wiki/Upgrading_from_pre-release_to_final#Performing_the_upgrade"  target="_blank">🔗</a></h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo dnf upgrade<br></code></pre></td></tr></table></figure>
+
+<h2 id="Systemd"><a href="#Systemd" class="headerlink" title="Systemd"></a>Systemd</h2><!-- TODO -->
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://dev.to/bowmanjd/install-fedora-on-windows-subsystem-for-linux-wsl-4b26">Install Fedora 36 or earlier on Windows Subsystem for Linux (WSL) </a><br><a target="_blank" rel="noopener" href="https://aimerneige.com/zh/post/install-fedora35-on-wsl/">在 wsl 下安装 fedora 35</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/303158815">通过微软的 WSL2 使用 Fedora 33 | Linux 中国</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Linux/" class="category-chain-item">Linux</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Linux/">#Linux</a>
+      
+        <a href="/tags/WSL/">#WSL</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>在 wsl 中安装 fedora</div>
+      <div>http://wortoxs.github.io/2022/10/08/在-wsl-中安装-fedora/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>wtox</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年10月8日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/10/08/%E5%9C%A8-wsl-%E4%B8%AD%E9%85%8D%E7%BD%AE-zsh/" title="在 wsl 中配置 zsh">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">在 wsl 中配置 zsh</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/10/07/Git-for-Windows/" title="Git for Windows">
+                        <span class="hidden-mobile">Git for Windows</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
